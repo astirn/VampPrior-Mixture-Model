@@ -1,0 +1,7 @@
+.idea/
+.run/
+*.pdf
+__pycache__/
+data/
+experiments/
+results/
