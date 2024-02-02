@@ -2,6 +2,10 @@
 
 This code generates all results in our submitted manuscript.
 
+## Package Requirements
+
+Our ``Dockerfile`` setups the computational environment using TensorFlow's official image for version 2.12.0 with GPU support as a starting point and uses ``requirements.txt`` to install all other required packages.
+
 ## Reproducing Experiments
 
 Run ``elbo_surgery_run.sh`` to produce Table 1.
@@ -12,11 +16,11 @@ Run ``single_cell_experiments_run.sh`` to produce Tables 3 and 4 and Figures 3, 
 
 ## Repository Overview
 
-``priors.py`` has our prior implementations for the DP GMM and VMM.
+``priors.py`` implements the DP GMM and VMM.
 
 ``models.py`` has the VAE models.
 
-``single_cell_models.py`` has our implementation of the scVI model.
+``single_cell_models.py`` has our implementation of scVI (Lopez et al., 2018).
 
 ``clustering_*.py`` are used by ``clustering_experiments_run.sh``.
 
