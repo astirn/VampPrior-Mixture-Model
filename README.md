@@ -4,7 +4,7 @@ This code generates all results in our submitted manuscript.
 
 ## Package Requirements
 
-Our ``Dockerfile`` setups the computational environment using TensorFlow's official image for version 2.12.0 with GPU support as a starting point and uses ``requirements.txt`` to install all other required packages.
+Our ``Dockerfile`` creates the computational environment from TensorFlow's official image for version 2.12.0 with GPU support and uses ``requirements.txt`` to install additionally required packages.
 
 ## Reproducing Experiments
 
