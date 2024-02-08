@@ -11,6 +11,8 @@ This code generates all results in [our manuscript](https://arxiv.org/abs/2402.0
       primaryClass={cs.LG}
 }
 ```
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/the-vampprior-mixture-model/image-clustering-on-fashion-mnist)](https://paperswithcode.com/sota/image-clustering-on-fashion-mnist?p=the-vampprior-mixture-model)
+
 
 ## Package Requirements
 
