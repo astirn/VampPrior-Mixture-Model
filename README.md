@@ -12,7 +12,9 @@ This code generates all results in [our manuscript](https://arxiv.org/abs/2402.0
 }
 ```
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/the-vampprior-mixture-model/image-clustering-on-fashion-mnist)](https://paperswithcode.com/sota/image-clustering-on-fashion-mnist?p=the-vampprior-mixture-model)
+
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/the-vampprior-mixture-model/unsupervised-image-classification-on-mnist)](https://paperswithcode.com/sota/unsupervised-image-classification-on-mnist?p=the-vampprior-mixture-model)
+
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/the-vampprior-mixture-model/image-clustering-on-mnist-full)](https://paperswithcode.com/sota/image-clustering-on-mnist-full?p=the-vampprior-mixture-model)
 
 ## Package Requirements
