@@ -1,7 +1,7 @@
 # The VampPrior Mixture Model
 
 This code generates all results in [our manuscript](https://arxiv.org/abs/2402.04412):
-'''
+```
 @misc{stirn2024vampprior,
       title={The VampPrior Mixture Model}, 
       author={Andrew Stirn and David A. Knowles},
@@ -10,7 +10,7 @@ This code generates all results in [our manuscript](https://arxiv.org/abs/2402.0
       archivePrefix={arXiv},
       primaryClass={cs.LG}
 }
-'''
+```
 
 ## Package Requirements
 
