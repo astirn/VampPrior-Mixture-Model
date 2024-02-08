@@ -1,6 +1,16 @@
 # The VampPrior Mixture Model
 
-This code generates all results in our submitted manuscript.
+This code generates all results in [our manuscript](https://arxiv.org/abs/2402.04412):
+'''
+@misc{stirn2024vampprior,
+      title={The VampPrior Mixture Model}, 
+      author={Andrew Stirn and David A. Knowles},
+      year={2024},
+      eprint={2402.04412},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+'''
 
 ## Package Requirements
 
