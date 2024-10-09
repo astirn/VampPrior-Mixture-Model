@@ -219,7 +219,7 @@ class EmpiricalBayesVariationalAutoencoder(VariationalAutoencoder, abc.ABC):
 
     def train_step(self, data: dict):
         variational_family = self.variational_inference_step(data['x'], trainable_variables=self.model_params)
-        self.prior.inference_step(q=self.qz, x=data['x'], training=False)
+        self.prior.inference_step(encoder=self.qz, x=data['x'], training=False)
         self.additional_metrics(data, variational_family)
         return self.get_metrics_result()
 
@@ -458,7 +458,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--dataset', type=str, default='mnist')
     parser.add_argument('--debug', action='store_true', default=False)
-    parser.add_argument('--early_stopping_monitor', type=str, default='val_elbo')
+    parser.add_argument('--early_stopping_monitor', type=str, default='val_nmi')
     parser.add_argument('--latent_dim', type=int, default=10)
     parser.add_argument('--learning_rate', type=float, default=1e-4)
     parser.add_argument('--max_clusters', type=int, default=100)

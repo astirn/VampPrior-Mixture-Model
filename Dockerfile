@@ -1,5 +1,6 @@
 # base image
-FROM tensorflow/tensorflow:2.12.0-gpu
+FROM tensorflow/tensorflow:2.15.0-gpu
+
 
 # user and group ID arguments
 ARG USER_ID=1000
@@ -16,6 +17,5 @@ COPY requirements.txt /tmp
 
 # install requirements
 RUN pip install --upgrade pip
-RUN pip install --upgrade "jax[cuda11_local]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-RUN pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+RUN pip install torch torchvision torchaudio
 RUN pip install -r requirements.txt

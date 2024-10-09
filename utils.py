@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
-from scipy.stats import ttest_rel
+from scipy.stats import ks_2samp
 from sklearn.metrics import adjusted_mutual_info_score, normalized_mutual_info_score
 
 
@@ -115,7 +115,7 @@ def process_results(df, threshold, mode='max', pm_std=False, no_test_cols=None):
                 mean.loc[i, col] = '{:.3f} $\\pm$ {:.2f}'.format(mean.loc[i, col], std.loc[i, col])
             else:
                 mean.loc[i, col] = '{:.4f}'.format(mean.loc[i, col])
-            p = ttest_rel(df.loc[best, col], df.loc[i, col]).pvalue if i != best else None
+            p = ks_2samp(df.loc[best, col], df.loc[i, col]).pvalue if i != best else None
             if (i == best or p >= threshold) and (no_test_cols is None or col not in no_test_cols):
                 mean.loc[i, col] = '\\textbf{' + mean.loc[i, col] + '}'
 

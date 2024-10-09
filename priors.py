@@ -50,7 +50,6 @@ class ClusteringPrior(Prior):
             num_clusters: int,
             inference: str,
             learning_rate: float,
-            pseudo_batch_size: int = 1,
             **kwargs):
         super().__init__(latent_dim=latent_dim, num_clusters=num_clusters)
 
@@ -59,7 +58,6 @@ class ClusteringPrior(Prior):
         self.inference = str(inference)
         if self.inference != 'None':
             self.optimizer = tf.keras.optimizers.Adam(learning_rate)
-        self.pseudo_batch_size = tf.constant(pseudo_batch_size, tf.float32)
 
         # priors
         self.prior_alpha = tfpd.Gamma(1.0, 1.0)
@@ -112,23 +110,23 @@ class ClusteringPrior(Prior):
     def qc(self, z, **kwargs) -> tf.Tensor:
         return tf.nn.softmax(self.log_prob_z_c(z, **kwargs) + tf.nn.log_softmax(self.pi_logits))
 
-    def inference_step(self, *, q: callable, x: tf.Tensor, **kwargs):
+    def inference_step(self, *, encoder: callable, x: tf.Tensor, **kwargs):
 
         # sample data from variational posterior
-        z = tf.expand_dims(q(x, **kwargs).sample(), axis=1)
+        z = tf.expand_dims(encoder(x, **kwargs).sample(), axis=1)
         n = tf.cast(tf.shape(z)[0], tf.float32)
 
         # E-step
         with tf.GradientTape() as tape:
-            log_prob_z_c = self.log_prob_z_c(z, encoder=q, **kwargs)
+            log_prob_z_c = self.log_prob_z_c(z, encoder=encoder, **kwargs)
             log_prob_c = tf.nn.log_softmax(self.pi_logits)
-            qc_z = tf.nn.softmax(log_prob_z_c + log_prob_c)
-            loss = -tf.reduce_sum(qc_z * (log_prob_z_c + log_prob_c)) / n
+            qc = tf.nn.softmax(log_prob_z_c + log_prob_c)
+            loss = -tf.reduce_sum(qc * (log_prob_z_c + log_prob_c)) / n
             if self.inference == 'MAP-DP':
                 loss -= self.prior_alpha.log_prob(self.alpha) / n
             if 'MAP' in self.inference:
                 loss -= self.log_prior_prob_pi() / n
-                loss -= tf.reduce_sum(self.log_prior_prob_mu(encoder=q, **kwargs)) / n
+                loss -= tf.reduce_sum(self.log_prior_prob_mu(encoder=encoder, **kwargs)) / n
                 loss -= tf.reduce_sum(self.prior_L.log_prob(self.L)) / n
 
         # M-step

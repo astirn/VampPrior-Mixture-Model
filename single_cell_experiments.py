@@ -92,11 +92,10 @@ elif args.mode == 'testing':
     # assemble test cases
     test_cases = [
         dict(model='scVI', prior='StandardNormal', prior_kwargs=dict()),
+        dict(model='scVI', prior='VampPrior', prior_kwargs=dict()),
         dict(model='scVI', prior='GaussianMixture', prior_kwargs=dict(inference='MAP-DP', prior_learning_ratio=plr)),
         dict(model='scVI', prior='VampPriorMixture',
              prior_kwargs=dict(inference='MAP-DP', prior_learning_ratio=plr, use_labels=False)),
-        dict(model='scVI', prior='VampPriorMixture',
-             prior_kwargs=dict(inference='MAP-DP', prior_learning_ratio=plr, use_labels=True)),
     ]
 
 else:
@@ -142,10 +141,9 @@ for i, batch_size in enumerate(batch_sizes):
             n_layers=model_config['n_layers'],
             gene_likelihood=model_config['likelihood'],
             deeply_inject_covariates=False,
-            log_variational=False)
+            log_variational=True)
         model.train(
             max_epochs=args.max_epochs,
-            use_gpu=use_gpu,
             train_size=args.train_ratio,
             batch_size=config['batch_size'],
             check_val_every_n_epoch=1,

@@ -3,5 +3,5 @@
 *.pdf
 __pycache__/
 data/
-experiments/
+experiments*/
 results/

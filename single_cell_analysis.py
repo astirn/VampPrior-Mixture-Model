@@ -260,10 +260,14 @@ def plot_mdes(exp_path):
             })
 
             # comparison plot
+            palette = (
+                    sns.color_palette('tab20', n_colors=20)[0::2] +
+                    sns.color_palette('tab20', n_colors=20)[1::2]
+            )
             kwargs = dict(
                 s=3,
                 alpha=0.5,
-                palette='tab20',
+                palette=palette,
                 markers=['o' if x < 20 else '^' for x in range(1, 41)],
                 rasterized=True,
             )
@@ -276,6 +280,9 @@ def plot_mdes(exp_path):
                 ax[i, c].set_xticks([])
                 ax[i, c].set_ylabel('')
                 ax[i, c].set_yticks([])
+                handles, labels = ax[i, c].get_legend_handles_labels()
+                ax[i, c].legend(handles=handles, labels=labels, markerscale=5)
+
             ax[i, 0].set_ylabel('{:s} with {:s} prior'.format(model, clean_prior_name(prior)),
                                 fontdict={'fontsize': rcParams['axes.titlesize']})
             if i == 0:
@@ -286,25 +293,6 @@ def plot_mdes(exp_path):
                 sns.move_legend(ax[i, 0], loc='upper center', bbox_to_anchor=(0.5, 0), ncol=2)
                 sns.move_legend(ax[i, 1], loc='upper center', bbox_to_anchor=(0.5, 0), ncol=2)
                 sns.move_legend(ax[i, 2], loc='upper center', bbox_to_anchor=(0.5, 0), ncol=4)
-
-            # # cluster assignment plot
-            # if os.path.exists(os.path.join(model_path, 'cluster_probs.npy')):
-            #     cluster_probs = np.load(os.path.join(model_path, 'cluster_probs.npy'))
-            #     cluster_pred = np.argmax(cluster_probs, axis=1)
-            #     _, cluster_pred = np.unique(cluster_pred, return_inverse=True)  # reorder clusters 1, 2, 3, ...
-            #     df['Cluster'] = cluster_pred + 1
-            #     fig_c, ax_c = plt.subplots(ncols=2, figsize=(10, 7), subplot_kw=dict(xticks=tuple(), yticks=tuple()))
-            #     fig_c.suptitle('{:s} with {:s} prior'.format(model, get_latex_name(prior)))
-            #     sns.scatterplot(df, x='x', y='y', hue='Cell type', ax=ax_c[0], **kwargs)
-            #     markers = ['o' if x < 20 else '^' for x in range(1, df['Cluster'].max() + 1)]
-            #     sns.scatterplot(df, x='x', y='y', hue='Cluster', style='Cluster', ax=ax_c[1], markers=markers, **kwargs)
-            #     ax_c[0].set_title('Cell type annotations')
-            #     ax_c[1].set_title('Model cluster assignments')
-            #     ax_c[0].legend(loc='upper center', bbox_to_anchor=(0.5, 0), ncol=2, title='Cell type')
-            #     ax_c[1].legend(loc='upper center', bbox_to_anchor=(0.5, 0), ncol=4, title='Cluster')
-            #     plt.tight_layout()
-            #     file_name = 'scRNA-clust-{:s}-{:s}-{:s}.pdf'.format(dataset.replace(' ', '-'), model, prior)
-            #     fig_c.savefig(os.path.join('results', file_name))
 
         # save figure
         plt.figure(fig)  # set current figure for tight layout after possible cluster assignment plot

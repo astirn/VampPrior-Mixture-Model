@@ -180,7 +180,8 @@ class scVI(tf.keras.Model, abc.ABC):
         self.cluster_util = tf.keras.metrics.MeanTensor(name='clust')
 
     def qz(self, xs, **kwargs):
-        params_z = self.encoder_z(tf.concat([tf.cast(xs[0], tf.float32), xs[1]], axis=1), **kwargs)
+        log_pseudo_counts = tf.math.log1p(tf.cast(xs[0], tf.float32))
+        params_z = self.encoder_z(tf.concat([log_pseudo_counts, xs[1]], axis=1), **kwargs)
         if self.latent_cov == 'diag':
             return tfpd.MultivariateNormalDiag(
                 loc=params_z[..., :self.dim_z],
@@ -267,7 +268,7 @@ class scVI(tf.keras.Model, abc.ABC):
         with tf.GradientTape() as tape:
             loss, variational_family = self.variational_objective(inputs, training=True)
         self.optimizer.apply_gradients(zip(tape.gradient(loss, self.model_params), self.model_params))
-        self.pz.inference_step(q=self.qz, x=(inputs['x'], inputs['s']), training=False)
+        self.pz.inference_step(encoder=self.qz, x=(inputs['x'], inputs['s']), training=False)
         self.additional_metrics(inputs, variational_family)
 
         return self.get_metrics_result()

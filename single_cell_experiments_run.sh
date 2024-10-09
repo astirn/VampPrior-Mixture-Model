@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # random number seed
-SEED=42823
+SEED=80085
 
 # loop over datasets
 DATASETS=("cortex" "pbmc" "lung atlas" "split-seq")
