@@ -13,6 +13,10 @@ from datasets import load_sc_dataset
 from priors import clean_prior_name
 from utils import process_results
 
+# avoid type 3 fonts
+rcParams['pdf.fonttype'] = 42
+rcParams['ps.fonttype'] = 42
+
 # configure GPUs
 for gpu in tf.config.list_physical_devices('GPU'):
     tf.config.experimental.set_memory_growth(gpu, enable=True)
@@ -127,7 +131,7 @@ def print_integration_table(exp_path, threshold):
                     file_name = 'testing_integration_performance_filtered.pkl'
                 else:
                     dataset_name = dataset
-                    file_name = 'testing_integration_performance.pkl'
+                    file_name = 'testing_integration_performance_additional.pkl'
                 integration = pd.read_pickle(os.path.join(exp_path, dataset, file_name))
             except FileNotFoundError:
                 continue
@@ -137,7 +141,7 @@ def print_integration_table(exp_path, threshold):
             # integration table processing
             integration = simplify_configurations(integration)
             integration.reset_index('Trial', drop=True, inplace=True)
-            integration = process_results(integration, threshold, pm_std=False)
+            integration = process_results(integration, threshold, pm_std=True)
 
             # update integration table
             integration['Dataset'] = dataset_name

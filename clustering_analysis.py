@@ -10,8 +10,14 @@ import tensorflow as tf
 from datasets import load_tensorflow_dataset
 from elbo_surgery_analysis import clean_table
 from priors import select_prior, clean_prior_name
+from matplotlib import rcParams
 from models import select_model, build_encoder, build_decoder
 from utils import sample_data_indices, process_results
+
+
+# avoid type 3 fonts
+rcParams['pdf.fonttype'] = 42
+rcParams['ps.fonttype'] = 42
 
 
 def plot_tuning(exp_path):

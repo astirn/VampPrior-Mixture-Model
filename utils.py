@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
-from scipy.stats import ks_2samp
+from scipy.stats import mannwhitneyu
 from sklearn.metrics import adjusted_mutual_info_score, normalized_mutual_info_score
 
 
@@ -112,10 +112,11 @@ def process_results(df, threshold, mode='max', pm_std=False, no_test_cols=None):
             if pm_std and mean.loc[i, col] > 1:
                 mean.loc[i, col] = '{:.3g} $\\pm$ {:.2f}'.format(mean.loc[i, col], std.loc[i, col])
             elif pm_std:
-                mean.loc[i, col] = '{:.3f} $\\pm$ {:.2f}'.format(mean.loc[i, col], std.loc[i, col])
+                mean.loc[i, col] = '{:.3f} $\\pm$ {:.3f}'.format(mean.loc[i, col], std.loc[i, col])
             else:
                 mean.loc[i, col] = '{:.4f}'.format(mean.loc[i, col])
-            p = ks_2samp(df.loc[best, col], df.loc[i, col]).pvalue if i != best else None
+            alternative = 'greater' if mode == 'max' else 'less'
+            p = mannwhitneyu(df.loc[best, col], df.loc[i, col], alternative=alternative).pvalue if i != best else None
             if (i == best or p >= threshold) and (no_test_cols is None or col not in no_test_cols):
                 mean.loc[i, col] = '\\textbf{' + mean.loc[i, col] + '}'
 

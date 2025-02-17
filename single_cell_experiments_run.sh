@@ -14,6 +14,7 @@ for dataset in "${DATASETS[@]}"; do
   do
     python3 single_cell_experiments.py --seed $SEED --dataset "$dataset" --mode "testing" --trial $i
   done
+  python3 single_cell_baselines.py --seed $SEED --dataset "$dataset"
 done
 
 # analyze results
