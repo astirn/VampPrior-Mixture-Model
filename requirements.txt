@@ -10,3 +10,5 @@ scvi-tools==1.1.2
 seaborn==0.13.2
 tensorflow-datasets==4.9.4
 tensorflow-probability==0.23.0
+harmonypy==0.0.10
+scanorama==1.7.4
