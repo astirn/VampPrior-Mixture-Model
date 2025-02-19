@@ -509,11 +509,11 @@ if __name__ == '__main__':
                      callbacks=[main_callback] + model.callbacks(x=x_train))
 
     # clustering performance
-    labels = tf.concat([labels_train, labels_valid], axis=0)
-    latent_samples = model.predict(dict(x=tf.concat([x_train, x_valid], axis=0)), verbose=False)
+    labels = tf.concat([labels_valid], axis=0)
+    latent_samples = model.predict(dict(x=tf.concat([x_valid], axis=0)), verbose=False)
     df = clustering_performance(model.cluster_probabilities(latent_samples), labels)
     with pd.option_context('display.max_columns', None, 'display.width', None):
         print(df)
 
     # elbo surgery
-    print('\n', model.elbo_surgery(dict(x=x_valid)))
+    print('\n', model.elbo_surgery(dict(x=x_valid), batch_size=100))
