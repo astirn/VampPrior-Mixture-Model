@@ -143,7 +143,7 @@ def num_rows_and_cols(number):
     return rows, cols
 
 
-def plot_generated_data(exp_path, mixture_probs, seed, show_pseudo_inputs=False):
+def plot_generated_data(exp_path, mixture_probs, seed):
     assert mixture_probs in {'prior', 'posterior'}
 
     # loop over experiments
@@ -194,7 +194,7 @@ def plot_generated_data(exp_path, mixture_probs, seed, show_pseudo_inputs=False)
                     if hasattr(model.prior, 'pi_logits'):
                         prior_probs = tf.nn.softmax(model.prior.pi_logits)
                     else:
-                        prior_probs = tf.ones(cluster_probs.shape[0])
+                        prior_probs = tf.ones(cluster_probs.shape[0]) / cluster_probs.shape[1]
                 elif mixture_probs == 'posterior':
                     prior_probs = tf.reduce_sum(cluster_probs, axis=0) / tf.reduce_sum(cluster_probs)
                 else:
@@ -208,31 +208,21 @@ def plot_generated_data(exp_path, mixture_probs, seed, show_pseudo_inputs=False)
 
                 # initialize figure
                 max_samples = 10
-                rows = max_samples + (2 if show_pseudo_inputs else 1)
+                rows = max_samples + 1
                 fig = plt.figure(figsize=(len(utilized_clusters), rows), constrained_layout=True)
-                font_dict = {'size': 8}
+                font_dict = {'size': 11}
                 gs = fig.add_gridspec(rows, len(utilized_clusters))
 
                 # loop over clusters
                 for j, cluster in enumerate(utilized_clusters):
                     # x-axis label
-                    x_label = '$\\pi_{{{:d}}} = {:.4f}$'.format(j + 1, prior_probs[j])
-
-                    # plot pseudo-inputs
-                    if show_pseudo_inputs:
-                        ax = fig.add_subplot(gs[-1, j])
-                        ax.set_xticks([]), ax.set_yticks([])
-                        ax.imshow(model.prior.u[cluster], cmap='Greys')
-                        ax.set_xlabel(x_label, fontdict=font_dict)
-                        if j == 0:
-                            ax.set_ylabel('Pseudo-input $u_j$', fontdict=font_dict)
+                    x_label = '$\\pi_{{{:d}}} = {:.2f}\\%$'.format(j + 1, 100 * prior_probs[j])
 
                     # plot most-probable member
-                    ax = fig.add_subplot(gs[-1 - int(show_pseudo_inputs), j])
+                    ax = fig.add_subplot(gs[-1, j])
                     ax.set_xticks([]), ax.set_yticks([])
                     ax.imshow(x_train[tf.argmax(cluster_probs[:, cluster])], cmap='Greys')
-                    if not show_pseudo_inputs:
-                        ax.set_xlabel(x_label, fontdict=font_dict)
+                    ax.set_xlabel(x_label, fontdict=font_dict)
                     if j == 0:
                         ax.set_ylabel('Most prob. $x$', fontdict=font_dict)
 
@@ -244,7 +234,7 @@ def plot_generated_data(exp_path, mixture_probs, seed, show_pseudo_inputs=False)
                         ax.set_xticks([]), ax.set_yticks([])
                         ax.imshow(tf.squeeze(model.px(z_samples[k, cluster][None]).sample()), cmap='Greys')
                         if j == 0 and k == 0:
-                            ax.set_ylabel('Samples $\longrightarrow$', fontdict=font_dict)
+                            ax.set_ylabel('   Samples $\longrightarrow$', fontdict=font_dict)
                 # save figure
                 fig.savefig(os.path.join('results', 'generated-{:s}-{:s}-{:s}.pdf'.format(dataset, p, mixture_probs)))
 
