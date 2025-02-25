@@ -59,7 +59,8 @@ def plot_tuning(exp_path):
         marker='o')
     sns.lineplot(tuning, x='Batch size', y='Utilized clusters', ax=ax[0], **kwargs)
     sns.move_legend(ax[0], loc='upper left', bbox_to_anchor=(0.0, 1.0))
-    sns.lineplot(tuning, x='Batch size', y='NMI (unmerged)', legend=False, ax=ax[1], **kwargs)
+    tuning.rename(columns={'NMI (unmerged)': 'NMI'}, inplace=True)
+    sns.lineplot(tuning, x='Batch size', y='NMI', legend=False, ax=ax[1], **kwargs)
     ax[0].set_xticks(tuning['Batch size'].unique())
     ax[1].set_xticks(tuning['Batch size'].unique())
     offset = 0.0175 * (max(ax[1].get_yticks()) - min(ax[1].get_yticks()))
@@ -258,12 +259,12 @@ if __name__ == '__main__':
     # tuning plots
     plot_tuning(experiment_path)
 
-    # clustering table
-    print_clustering_table(experiment_path, args.threshold)
-
-    # plot generated data
-    plot_generated_data(experiment_path, mixture_probs='prior', seed=args.seed)
-    plot_generated_data(experiment_path, mixture_probs='posterior', seed=args.seed)
+    # # clustering table
+    # print_clustering_table(experiment_path, args.threshold)
+    #
+    # # plot generated data
+    # plot_generated_data(experiment_path, mixture_probs='prior', seed=args.seed)
+    # plot_generated_data(experiment_path, mixture_probs='posterior', seed=args.seed)
 
     # show plots
     plt.show()
